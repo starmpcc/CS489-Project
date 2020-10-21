@@ -97,11 +97,15 @@ def get_review(app):
         body = driver.find_element_by_css_selector('body')
         body.send_keys(Keys.PAGE_DOWN)
 
+    tmp = driver.find_element_by_css_selector('#fcxH9b > div.WpDbMd > c-wiz > div > div.ZfcPIb > div > div > main > div > div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div')
+    print(tmp)
+    tmp.click()
+    driver.save_screenshot("asdf.png")
+    driver.find_element_by_xpath('//*[@id="fcxH9b"]/div[4]/c-wiz/div/div[2]/div/div/main/div/div[1]/div[2]/c-wiz/div[1]/div/div[2]/div[1]').click()
+    
     html = driver.page_source
     soup = BeautifulSoup(html, 'html.parser')
     
-
-
     tmp = soup.select('div > div.d15Mdf.bAhLNe > div.xKpxId.zc7KVe > div.bAhLNe.kx8XBd > span')
     for i in range(len(tmp)):
         app.writer.append(tmp[i].contents[0])
