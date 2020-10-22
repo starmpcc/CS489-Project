@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo_img from "../assets/logo_img.png";
-import { Nav, Image, NavDropdown } from "react-bootstrap";
+import { Nav, Image } from "react-bootstrap";
 
 import "../styles/css/Topbar.css";
 
 export function Topbar() {
   return (
-    <div>
+    <div className="topbarcompound">
       <Link to="/">
         <div>
-          <Image src={logo_img}></Image>
+          <Image src={logo_img} width="300vw"></Image>
         </div>
       </Link>
-
+      <h2>by Team6</h2>
       <Nav className="navitems">
         <Nav.Item>
           <Nav.Link className="navlink" href="/purchase">
@@ -23,16 +23,6 @@ export function Topbar() {
         <Nav.Item>
           <Nav.Link className="navlink" href="/purchase">
             <b>팀 소개</b>
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link className="navlink" href="/purchase">
-            <b>회원가입</b>
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link className="navlink" href="/purchase">
-            <b>로그인</b>
           </Nav.Link>
         </Nav.Item>
       </Nav>
