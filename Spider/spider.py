@@ -4,6 +4,7 @@ import re
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
+from write_csv import *
 
 app_list = []
 
@@ -29,7 +30,7 @@ class App:
         self.addr = addr
         req = requests.get(PLAY_DOMAIN + addr)
         self.soup = BeautifulSoup(req.text, 'html.parser')
-
+        self.file = init_csv(self)
 
 """
 void get_app_list(void)
@@ -81,20 +82,23 @@ def get_metadata(app):
     tmp = tmp[0].get('style')
     app.rate_1 = regex.findall(tmp)[0]
 
+    write_metadata(app)
 
 
 """
 void get_review(App app)
 For each application, scrape the reviews in the pages.
 It scrape writer's nickname, rate, written date, and the contents of the review  
-The variable num_scroll define the number of pages to read
+The variable NUM_SCROLL define the number of pages to read
+The variable SAVED_REVIEWS define the number of saved reviews in memory
 """
-num_scroll = 10
+NUM_SCROLL = 100
+SAVED_REVIEWS = 10
 
-def get_review(app):
+def get_all_reviews(app):
     driver = webdriver.PhantomJS()
     driver.get(PLAY_DOMAIN + app.addr + REVIEW_SUFFIX)
-    for i in range(num_scroll):
+    for i in range(NUM_SCROLL):
         body = driver.find_element_by_css_selector('body')
         body.send_keys(Keys.PAGE_DOWN)
 
@@ -109,18 +113,15 @@ def get_review(app):
     tmp = soup.select('div > div.d15Mdf.bAhLNe > div.xKpxId.zc7KVe > div.bAhLNe.kx8XBd > span')
     for i in range(len(tmp)):
         app.writer.append(tmp[i].contents[0])
-    print(app.writer)
 
     tmp = soup.select('div > div.d15Mdf.bAhLNe > div.xKpxId.zc7KVe > div.bAhLNe.kx8XBd > div > span.nt2C1d > div > div')
     regex = re.compile('\d')
     for i in range(len(tmp)):
         app.rate.append(regex.findall(tmp[i].get('aria-label'))[0])
-    print(app.rate)
 
     tmp = soup.select('div > div.d15Mdf.bAhLNe > div.xKpxId.zc7KVe > div.bAhLNe.kx8XBd > div > span.p2TkOb')
     for i in range(len(tmp)):
         app.date.append(tmp[i].contents[0])
-    print(app.date)
 
     tmp = soup.select('div > div.d15Mdf.bAhLNe > div.UD7Dzf > span:nth-child(1)')
     tmp_long = soup.select('div > div.d15Mdf.bAhLNe > div.UD7Dzf > span:nth-child(2)')
@@ -130,16 +131,85 @@ def get_review(app):
             app.contents.append(tmp_long[i].contents[0])
         else:
             app.contents.append(tmp[i].contents[0])
-    print(app.contents)
+
+    write_all_reviews(app)
+
+    app.writer = app.writer[:SAVED_REVIEWS]
+    app.rate = app.rate[:SAVED_REVIEWS]
+    app.date = app.date[:SAVED_REVIEWS]
+    app.contents = app.contets[:SAVED_REVIEWS]
 
 
-'''
-get_app_list()
-for app in app_list:
-    get_metadata(app)
-    get_review(app)
-'''
+def get_new_reviews(app):
+    driver = webdriver.PhantomJS()
+    driver.get(PLAY_DOMAIN + app.addr + REVIEW_SUFFIX)
 
-app_list.append(App("Zoom","/store/apps/details?id=us.zoom.videomeetings"))
-get_metadata(app_list[0])
-get_review(app_list[0])
+    # Reload Page with Newest Order
+    driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div > div:nth-child(2)').click()
+    driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(1)').click()
+    time.sleep(3)
+
+    for i in range(SAVED_REVIEWS):
+        writer = []
+        rate = []
+        date = []
+        contents = []
+        html = driver.page_source
+        soup = BeautifulSoup(html, 'html.parser')
+        
+        tmp = soup.select('div > div.d15Mdf.bAhLNe > div.xKpxId.zc7KVe > div.bAhLNe.kx8XBd > span')
+        for j in range(len(tmp)):
+            writer.append(tmp[j].contents[0])
+
+        tmp = soup.select('div > div.d15Mdf.bAhLNe > div.xKpxId.zc7KVe > div.bAhLNe.kx8XBd > div > span.nt2C1d > div > div')
+        regex = re.compile('\d')
+        for j in range(len(tmp)):
+            rate.append(regex.findall(tmp[j].get('aria-label'))[0])
+
+        tmp = soup.select('div > div.d15Mdf.bAhLNe > div.xKpxId.zc7KVe > div.bAhLNe.kx8XBd > div > span.p2TkOb')
+        for j in range(len(tmp)):
+            date.append(tmp[j].contents[0])
+
+        tmp = soup.select('div > div.d15Mdf.bAhLNe > div.UD7Dzf > span:nth-child(1)')
+        tmp_long = soup.select('div > div.d15Mdf.bAhLNe > div.UD7Dzf > span:nth-child(2)')
+
+        for j in range(len(tmp)):
+            if (tmp_long[j].contents):
+                contents.append(tmp_long[j].contents[0])
+            else:
+                contents.append(tmp[j].contents[0])
+
+
+
+        if (app.contents[i] in contents):
+            idx = contents.index(app.contents[i])
+            for j in reversed(range(idx)):
+                write_new_reveiw(app, writer[j], rate[j], date[j], contents[j])
+            app.writer = writer[:SAVED_REVIEWS]
+            app.rate = rate[:SAVED_REVIEWS]
+            app.date = date[:SAVED_REVIEWS]
+            app.contents = contents[:SAVED_REVIEWS]
+            break
+        else:
+            for j in range(10):
+                body = driver.find_element_by_css_selector('body')
+                body.send_keys(Keys.PAGE_DOWN)
+        
+        if (i == SAVED_REVIEWS -1):
+            printf("ERROR-TOO MANY REVIEWS ARE DELETED")
+            exit(-1)
+            
+
+
+if __name__ == "__main__":
+    '''
+    get_app_list()
+    for app in app_list:
+        get_metadata(app)
+        get_review(app)
+    '''
+    app_list.append(App("Zoom","/store/apps/details?id=us.zoom.videomeetings"))
+    get_metadata(app_list[0])
+    get_all_reviews(app_list[0])
+    while (True):
+        get_new_reviews(app_list[0])
