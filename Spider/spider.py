@@ -3,6 +3,7 @@ import requests
 import re
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+import time
 
 app_list = []
 
@@ -97,12 +98,11 @@ def get_review(app):
         body = driver.find_element_by_css_selector('body')
         body.send_keys(Keys.PAGE_DOWN)
 
-    tmp = driver.find_element_by_css_selector('#fcxH9b > div.WpDbMd > c-wiz > div > div.ZfcPIb > div > div > main > div > div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div')
-    print(tmp)
-    tmp.click()
-    driver.save_screenshot("asdf.png")
-    driver.find_element_by_xpath('//*[@id="fcxH9b"]/div[4]/c-wiz/div/div[2]/div/div/main/div/div[1]/div[2]/c-wiz/div[1]/div/div[2]/div[1]').click()
-    
+    # Reload Page with Newest Order
+    driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div > div:nth-child(2)').click()
+    driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(1)').click()
+    time.sleep(3)
+
     html = driver.page_source
     soup = BeautifulSoup(html, 'html.parser')
     
@@ -124,8 +124,9 @@ def get_review(app):
 
     tmp = soup.select('div > div.d15Mdf.bAhLNe > div.UD7Dzf > span:nth-child(1)')
     tmp_long = soup.select('div > div.d15Mdf.bAhLNe > div.UD7Dzf > span:nth-child(2)')
+
     for i in range(len(tmp)):
-        if (len(tmp_long[i].contents[0])):
+        if (tmp_long[i].contents):
             app.contents.append(tmp_long[i].contents[0])
         else:
             app.contents.append(tmp[i].contents[0])
