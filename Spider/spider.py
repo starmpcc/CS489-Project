@@ -25,6 +25,7 @@ class App:
     rate = []
     date = []
     contents = []
+    wr = None
     def __init__(self, name, addr):
         self.name = name
         self.addr = addr
@@ -92,21 +93,28 @@ It scrape writer's nickname, rate, written date, and the contents of the review
 The variable NUM_SCROLL define the number of pages to read
 The variable SAVED_REVIEWS define the number of saved reviews in memory
 """
-NUM_SCROLL = 100
+NUM_SCROLL = 30
 SAVED_REVIEWS = 10
 
 def get_all_reviews(app):
     driver = webdriver.PhantomJS()
     driver.get(PLAY_DOMAIN + app.addr + REVIEW_SUFFIX)
-    for i in range(NUM_SCROLL):
-        body = driver.find_element_by_css_selector('body')
-        body.send_keys(Keys.PAGE_DOWN)
 
     # Reload Page with Newest Order
     driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div > div:nth-child(2)').click()
     driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(1)').click()
     time.sleep(3)
-
+    
+    for i in range(NUM_SCROLL):
+        driver.execute_script('window.scrollTo(0,document.body.scrollHeight);')
+        time.sleep(1)
+        try:
+            driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > div.PFAhAf > div').click()
+        except:
+            pass
+        else:
+            time.sleep(1)
+        print(i)
     html = driver.page_source
     soup = BeautifulSoup(html, 'html.parser')
     
@@ -137,7 +145,7 @@ def get_all_reviews(app):
     app.writer = app.writer[:SAVED_REVIEWS]
     app.rate = app.rate[:SAVED_REVIEWS]
     app.date = app.date[:SAVED_REVIEWS]
-    app.contents = app.contets[:SAVED_REVIEWS]
+    app.contents = app.contents[:SAVED_REVIEWS]
 
 
 def get_new_reviews(app):
@@ -191,9 +199,15 @@ def get_new_reviews(app):
             app.contents = contents[:SAVED_REVIEWS]
             break
         else:
-            for j in range(10):
-                body = driver.find_element_by_css_selector('body')
-                body.send_keys(Keys.PAGE_DOWN)
+            for j in range(3):
+                driver.execute_script('window.scrollTo(0,document.body.scrollHeight);')
+                time.sleep(1)
+                try:
+                    driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > div.PFAhAf > div').click()
+                except:
+                    pass
+                else:
+                    time.sleep(1)
         
         if (i == SAVED_REVIEWS -1):
             printf("ERROR-TOO MANY REVIEWS ARE DELETED")
@@ -211,5 +225,6 @@ if __name__ == "__main__":
     app_list.append(App("Zoom","/store/apps/details?id=us.zoom.videomeetings"))
     get_metadata(app_list[0])
     get_all_reviews(app_list[0])
-    while (True):
-        get_new_reviews(app_list[0])
+#    for i in range(5):
+#        get_new_reviews(app_list[0])
+#        time.sleep(5)
