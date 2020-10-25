@@ -13,6 +13,7 @@ app_list = []
 #Global Addresses
 CHART_ADDR = "https://play.google.com/store/apps/collection/cluster?clp=0g4gCh4KGHRvcHNlbGxpbmdfbmV3X2ZyZWVfR0FNRRAHGAM%3D:S:ANO1ljIxjbU&gsr=CiPSDiAKHgoYdG9wc2VsbGluZ19uZXdfZnJlZV9HQU1FEAcYAw%3D%3D:S:ANO1ljJL0LQ"
 PLAY_DOMAIN = "https://play.google.com"
+LOCALE_SUFFIX= "&hl=en_US&gl=US"
 REVIEW_SUFFIX = "&showAllReviews=true"
 
 class App:
@@ -35,7 +36,7 @@ class App:
     def init(self, name, addr):
         self.name = name
         self.addr = addr
-        req = requests.get(PLAY_DOMAIN + addr)
+        req = requests.get(PLAY_DOMAIN + addr + LOCALE_SUFFIX)
         self.soup = BeautifulSoup(req.text, 'html.parser')
         init_csv(self)
 
@@ -106,8 +107,7 @@ SAVED_REVIEWS = 10
 
 def get_all_reviews(app):
     driver = webdriver.PhantomJS(os.getcwd()+'/phantomjs-2.1.1-linux-x86_64/bin/phantomjs')
-    driver.get(PLAY_DOMAIN + app.addr + REVIEW_SUFFIX)
-
+    driver.get(PLAY_DOMAIN + app.addr + LOCALE_SUFFIX + REVIEW_SUFFIX)
     # Reload Page with Newest Order
     driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div > div:nth-child(2)').click()
     driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(1)').click()
@@ -122,7 +122,7 @@ def get_all_reviews(app):
             pass
         else:
             time.sleep(1)
-    html = driver.page_source
+    html = (driver.page_source).encode('utf-8')
     soup = BeautifulSoup(html, 'html.parser')
     
     tmp = soup.select('div > div.d15Mdf.bAhLNe > div.xKpxId.zc7KVe > div.bAhLNe.kx8XBd > span')
@@ -160,7 +160,7 @@ def get_all_reviews(app):
 
 def get_new_reviews(app):
     driver = webdriver.PhantomJS(os.getcwd()+'/phantomjs-2.1.1-linux-x86_64/bin/phantomjs')
-    driver.get(app.addr + REVIEW_SUFFIX)
+    driver.get(app.addr + LOCALE_SUFFIX + REVIEW_SUFFIX)
     # Reload Page with Newest Order
     driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div > div:nth-child(2)').click()
     driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(1)').click()
@@ -171,7 +171,7 @@ def get_new_reviews(app):
         rate = []
         date = []
         contents = []
-        html = driver.page_source
+        html = (driver.page_source).encode('utf-8')
         soup = BeautifulSoup(html, 'html.parser')
         
         tmp = soup.select('div > div.d15Mdf.bAhLNe > div.xKpxId.zc7KVe > div.bAhLNe.kx8XBd > span')
