@@ -5,11 +5,13 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 from write_csv import *
+import sys
+import os
 
 app_list = []
 
 #Global Addresses
-CHART_ADDR = "https://play.google.com/store/apps/collection/cluster?clp=0g4jCiEKG3RvcHNlbGxpbmdfZnJlZV9BUFBMSUNBVElPThAHGAM%3D:S:ANO1ljKs-KA&gsr=CibSDiMKIQobdG9wc2VsbGluZ19mcmVlX0FQUExJQ0FUSU9OEAcYAw%3D%3D:S:ANO1ljL40zU"
+CHART_ADDR = "https://play.google.com/store/apps/collection/cluster?clp=0g4gCh4KGHRvcHNlbGxpbmdfbmV3X2ZyZWVfR0FNRRAHGAM%3D:S:ANO1ljIxjbU&gsr=CiPSDiAKHgoYdG9wc2VsbGluZ19uZXdfZnJlZV9HQU1FEAcYAw%3D%3D:S:ANO1ljJL0LQ"
 PLAY_DOMAIN = "https://play.google.com"
 REVIEW_SUFFIX = "&showAllReviews=true"
 
@@ -26,12 +28,16 @@ class App:
     date = []
     contents = []
     wr = None
-    def __init__(self, name, addr):
+    file = None
+    name = None
+    addr = None
+    soup = None
+    def init(self, name, addr):
         self.name = name
         self.addr = addr
         req = requests.get(PLAY_DOMAIN + addr)
         self.soup = BeautifulSoup(req.text, 'html.parser')
-        self.file = init_csv(self)
+        init_csv(self)
 
 """
 void get_app_list(void)
@@ -47,7 +53,9 @@ def get_app_list():
     for i in range(len(names)):
         name =  names[i].get('title')
         addr = addrs[i].get('href')
-        app_list.append(App(name, addr))
+        app = App()
+        app.init(name, addr)
+        app_list.append(app)
 
 """
 void get_metadata(App app)
@@ -97,7 +105,7 @@ NUM_SCROLL = 30
 SAVED_REVIEWS = 10
 
 def get_all_reviews(app):
-    driver = webdriver.PhantomJS()
+    driver = webdriver.PhantomJS(os.getcwd()+'/phantomjs-2.1.1-linux-x86_64/bin/phantomjs')
     driver.get(PLAY_DOMAIN + app.addr + REVIEW_SUFFIX)
 
     # Reload Page with Newest Order
@@ -114,7 +122,6 @@ def get_all_reviews(app):
             pass
         else:
             time.sleep(1)
-        print(i)
     html = driver.page_source
     soup = BeautifulSoup(html, 'html.parser')
     
@@ -147,11 +154,13 @@ def get_all_reviews(app):
     app.date = app.date[:SAVED_REVIEWS]
     app.contents = app.contents[:SAVED_REVIEWS]
 
+    driver.close()
+    print ('Spidering app '+app.name+' done')
+
 
 def get_new_reviews(app):
-    driver = webdriver.PhantomJS()
-    driver.get(PLAY_DOMAIN + app.addr + REVIEW_SUFFIX)
-
+    driver = webdriver.PhantomJS(os.getcwd()+'/phantomjs-2.1.1-linux-x86_64/bin/phantomjs')
+    driver.get(app.addr + REVIEW_SUFFIX)
     # Reload Page with Newest Order
     driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div > div:nth-child(2)').click()
     driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(1)').click()
@@ -192,7 +201,7 @@ def get_new_reviews(app):
         if (app.contents[i] in contents):
             idx = contents.index(app.contents[i])
             for j in reversed(range(idx)):
-                write_new_reveiw(app, writer[j], rate[j], date[j], contents[j])
+                write_new_review(app, writer[j], rate[j], date[j], contents[j])
             app.writer = writer[:SAVED_REVIEWS]
             app.rate = rate[:SAVED_REVIEWS]
             app.date = date[:SAVED_REVIEWS]
@@ -210,9 +219,11 @@ def get_new_reviews(app):
                     time.sleep(1)
         
         if (i == SAVED_REVIEWS -1):
-            printf("ERROR-TOO MANY REVIEWS ARE DELETED")
+            print("ERROR-TOO MANY REVIEWS ARE DELETED")
             exit(-1)
             
+    driver.close()
+
 
 
 if __name__ == "__main__":
@@ -222,9 +233,58 @@ if __name__ == "__main__":
         get_metadata(app)
         get_review(app)
     '''
-    app_list.append(App("Zoom","/store/apps/details?id=us.zoom.videomeetings"))
-    get_metadata(app_list[0])
-    get_all_reviews(app_list[0])
-#    for i in range(5):
-#        get_new_reviews(app_list[0])
-#        time.sleep(5)
+    if (len(sys.argv) != 2):
+        print("Wrong input\nPossible Options\n\t-n: Get 2000 reviews/app in target\n\t-c:Continously Spidering new reviews continuously\n\t-d:For development only")
+
+    if (sys.argv[1]=='-n'):
+        get_app_list()
+        for app in app_list:
+            get_metadata(app)
+            get_all_reviews(app)
+        print('All task finished, check ./data directory')
+
+
+    if (sys.argv[1] == '-c'):
+        name_list = os.listdir(os.getcwd() + '/data')
+        for n in name_list:
+            f = open('./data/'+n, 'r')
+            lines = f.readlines()
+            for i in range(9):
+                lines[i] = lines[i].strip().split('\t')
+            app = App()
+            app.name = lines[0][1]
+            app.addr = lines[1][1]
+            app.mean_rate = lines[2][1]
+            app.tot_rates = lines[3][1]
+            app.rate_5 = lines[4][1]
+            app.rate_4 = lines[5][1]
+            app.rate_3 = lines[6][1]
+            app.rate_2 = lines[7][1]
+            app.rate_1 = lines[8][1]
+
+            for i in range(-1, -SAVED_REVIEWS -1, -1):
+                lines[i] = lines[i].strip().split('\t')
+                app.writer.append(lines[i][0])
+                app.rate.append(lines[i][1])
+                app.date.append(lines[i][2])
+                app.contents.append(lines[i][3])
+            
+            f.close()
+            app.file = open(os.getcwd() + '/data/'+n, 'a')
+            app.wr = csv.writer(app.file, delimiter = '\t')
+
+            app_list.append(app)
+        
+        cycle = 0
+        while True:
+            for app in app_list:
+                get_new_reviews(app)
+            cycle +=1
+            print(cycle)      
+            time.sleep(10)          
+
+
+    if (sys.argv[1] == '-d'):   
+        app_list.append(App("Zoom","/store/apps/details?id=us.zoom.videomeetings"))
+        get_metadata(app_list[0])
+        get_all_reviews(app_list[0])

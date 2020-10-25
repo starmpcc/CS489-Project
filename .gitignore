@@ -1,5 +1,5 @@
-.vscode/settings.json
+*.json
 *.log
 __pycache__
-*.csv
+*.tsv
 Spider/*.png
