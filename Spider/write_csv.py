@@ -1,8 +1,9 @@
 import csv
-from spider import *
+from spider import PLAY_DOMAIN
+import os
 
 def init_csv(app):
-    app.file = open(app.name+'.csv','w+')
+    app.file = open(os.getcwd() + '/data/'+app.name+'.tsv','w+')
     app.wr = csv.writer(app.file, delimiter = '\t')
     app.wr.writerow(['Name', app.name])
     app.wr.writerow(['Address', PLAY_DOMAIN+app.addr])
