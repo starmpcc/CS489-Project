@@ -224,6 +224,40 @@ def get_new_reviews(app):
             
     driver.close()
 
+def load_data():
+    name_list = os.listdir(os.getcwd() + '/data')
+    for n in name_list:
+        f = open('./data/'+n, 'r')
+        lines = f.readlines()
+        for i in range(9):
+            lines[i] = lines[i].strip().split('\t')
+        app = App()
+        app.name = lines[0][1]
+        app.addr = lines[1][1]
+        app.mean_rate = lines[2][1]
+        app.tot_rates = lines[3][1]
+        app.rate_5 = lines[4][1]
+        app.rate_4 = lines[5][1]
+        app.rate_3 = lines[6][1]
+        app.rate_2 = lines[7][1]
+        app.rate_1 = lines[8][1]
+
+        for i in range(-1, -SAVED_REVIEWS -1, -1):
+            lines[i] = lines[i].strip().split('\t')
+            app.writer.append(lines[i][0])
+            app.rate.append(lines[i][1])
+            app.date.append(lines[i][2])
+            app.contents.append(lines[i][3])
+        
+        f.close()
+        app.file = open(os.getcwd() + '/data/'+n, 'a')
+        app.wr = csv.writer(app.file, delimiter = '\t')
+
+        app_list.append(app)
+
+
+def get_rate(app):
+    
 
 
 if __name__ == "__main__":
@@ -245,40 +279,18 @@ if __name__ == "__main__":
 
 
     if (sys.argv[1] == '-c'):
-        name_list = os.listdir(os.getcwd() + '/data')
-        for n in name_list:
-            f = open('./data/'+n, 'r')
-            lines = f.readlines()
-            for i in range(9):
-                lines[i] = lines[i].strip().split('\t')
-            app = App()
-            app.name = lines[0][1]
-            app.addr = lines[1][1]
-            app.mean_rate = lines[2][1]
-            app.tot_rates = lines[3][1]
-            app.rate_5 = lines[4][1]
-            app.rate_4 = lines[5][1]
-            app.rate_3 = lines[6][1]
-            app.rate_2 = lines[7][1]
-            app.rate_1 = lines[8][1]
-
-            for i in range(-1, -SAVED_REVIEWS -1, -1):
-                lines[i] = lines[i].strip().split('\t')
-                app.writer.append(lines[i][0])
-                app.rate.append(lines[i][1])
-                app.date.append(lines[i][2])
-                app.contents.append(lines[i][3])
-            
-            f.close()
-            app.file = open(os.getcwd() + '/data/'+n, 'a')
-            app.wr = csv.writer(app.file, delimiter = '\t')
-
-            app_list.append(app)
+        load_data()
+       t =  time.time()
         
         cycle = 0
         while True:
             for app in app_list:
                 get_new_reviews(app)
+            #get metadata for each hour
+            if (time.time() - t > 3600):
+                for app in app_list:
+                    get_rate(app)
+                t = time.time()
             cycle +=1
             print(cycle)      
             time.sleep(10)          
