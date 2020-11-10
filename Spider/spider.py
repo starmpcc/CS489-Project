@@ -33,7 +33,11 @@ class App:
     name = None
     addr = None
     soup = None
-    def init(self, name, addr):
+    metawr = None
+    reviewwr = None
+    reviewfile = None
+    metafile = None
+    def __init__(self, name, addr):
         self.name = name
         self.addr = addr
         req = requests.get(PLAY_DOMAIN + addr + LOCALE_SUFFIX)
@@ -64,6 +68,10 @@ For each application, scrape the metadata of rates.
 It includes mean rate, total rates, ratio of each rates, 
 """
 def get_metadata(app):
+    t = time.time()
+    req = requests.get(PLAY_DOMAIN + app.addr)
+    app.soup = BeautifulSoup(req.text, 'html.parser')
+    
     tmp = app.soup.select('div.W4P4ne > c-wiz > div.K9wGie > div.BHMmbe')
     app.mean_rate = tmp[0].contents[0]
 
@@ -92,7 +100,7 @@ def get_metadata(app):
     tmp = tmp[0].get('style')
     app.rate_1 = regex.findall(tmp)[0]
 
-    write_metadata(app)
+    write_metadata(app, t)
 
 
 """
@@ -102,7 +110,7 @@ It scrape writer's nickname, rate, written date, and the contents of the review
 The variable NUM_SCROLL define the number of pages to read
 The variable SAVED_REVIEWS define the number of saved reviews in memory
 """
-NUM_SCROLL = 30
+NUM_SCROLL = 5
 SAVED_REVIEWS = 10
 
 def get_all_reviews(app):
@@ -255,9 +263,6 @@ def load_data():
 
         app_list.append(app)
 
-
-def get_rate(app):
-    
 
 
 if __name__ == "__main__":
