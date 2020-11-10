@@ -37,7 +37,7 @@ class App:
     reviewwr = None
     reviewfile = None
     metafile = None
-    def __init__(self, name, addr):
+    def init(self, name, addr):
         self.name = name
         self.addr = addr
         req = requests.get(PLAY_DOMAIN + addr + LOCALE_SUFFIX)
@@ -138,7 +138,7 @@ def get_all_reviews(app):
         app.writer.append(tmp[i].contents[0])
 
     tmp = soup.select('div > div.d15Mdf.bAhLNe > div.xKpxId.zc7KVe > div.bAhLNe.kx8XBd > div > span.nt2C1d > div > div')
-    regex = re.compile('\d')
+    regex = re.compile(r'\d')
     for i in range(len(tmp)):
         app.rate.append(regex.findall(tmp[i].get('aria-label'))[0])
 
@@ -187,7 +187,7 @@ def get_new_reviews(app):
             writer.append(tmp[j].contents[0])
 
         tmp = soup.select('div > div.d15Mdf.bAhLNe > div.xKpxId.zc7KVe > div.bAhLNe.kx8XBd > div > span.nt2C1d > div > div')
-        regex = re.compile('\d')
+        regex = re.compile(r'\d')
         for j in range(len(tmp)):
             rate.append(regex.findall(tmp[j].get('aria-label'))[0])
 
@@ -285,7 +285,7 @@ if __name__ == "__main__":
 
     if (sys.argv[1] == '-c'):
         load_data()
-       t =  time.time()
+        t = time.time()
         
         cycle = 0
         while True:
@@ -294,14 +294,16 @@ if __name__ == "__main__":
             #get metadata for each hour
             if (time.time() - t > 3600):
                 for app in app_list:
-                    get_rate(app)
+                    get_metadata(app)
                 t = time.time()
             cycle +=1
             print(cycle)      
             time.sleep(10)          
 
 
-    if (sys.argv[1] == '-d'):   
-        app_list.append(App("Zoom","/store/apps/details?id=us.zoom.videomeetings"))
+    if (sys.argv[1] == '-d'):
+        app = App()
+        app.init("Zoom","/store/apps/details?id=us.zoom.videomeetings")
+        app_list.append(app)
         get_metadata(app_list[0])
         get_all_reviews(app_list[0])
