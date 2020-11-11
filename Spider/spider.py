@@ -289,16 +289,14 @@ if __name__ == "__main__":
         
         cycle = 0
         while True:
-            for app in app_list:
-                get_new_reviews(app)
             #get metadata for each hour
-            if (time.time() - t > 3600):
                 for app in app_list:
                     get_metadata(app)
+                get_new_reviews(app)
                 t = time.time()
             cycle +=1
             print(cycle)      
-            time.sleep(10)          
+            time.sleep(3600)          
 
 
     if (sys.argv[1] == '-d'):
