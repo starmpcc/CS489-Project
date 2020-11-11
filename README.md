@@ -7,6 +7,7 @@ Package Dependencies
 =======
 Spider
 -----
- - Python 3.8.1
+ - Python 3.8.6
  - BeautifulSoup4-0.0.1
  - Selenium 3.141.0
+ - Microsoft Edge & Edge Webdriver 86.0.622.63

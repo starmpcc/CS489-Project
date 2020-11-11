@@ -73,6 +73,7 @@ def get_metadata(app):
     app.soup = BeautifulSoup(req.text, 'html.parser')
     
     tmp = app.soup.select('div.W4P4ne > c-wiz > div.K9wGie > div.BHMmbe')
+    print(tmp)
     app.mean_rate = tmp[0].contents[0]
 
     tmp = app.soup.select('div.W4P4ne > c-wiz > div.K9wGie > span > span:nth-child(2)')
@@ -110,26 +111,27 @@ It scrape writer's nickname, rate, written date, and the contents of the review
 The variable NUM_SCROLL define the number of pages to read
 The variable SAVED_REVIEWS define the number of saved reviews in memory
 """
-NUM_SCROLL = 5
+NUM_SCROLL = 30
 SAVED_REVIEWS = 10
 
 def get_all_reviews(app):
-    driver = webdriver.PhantomJS(os.getcwd()+'/phantomjs-2.1.1-linux-x86_64/bin/phantomjs')
+    driver = webdriver.Edge(os.getcwd()+'/msedgedriver.exe')
     driver.get(PLAY_DOMAIN + app.addr + LOCALE_SUFFIX + REVIEW_SUFFIX)
     # Reload Page with Newest Order
-    driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div > div:nth-child(2)').click()
+    driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div:nth-child(1)').click()
+    time.sleep(1)
     driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(1)').click()
     time.sleep(3)
     
     for i in range(NUM_SCROLL):
         driver.execute_script('window.scrollTo(0,document.body.scrollHeight);')
-        time.sleep(1)
+        time.sleep(3)
         try:
-            driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > div.PFAhAf > div').click()
+            driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > div.PFAhAf > div > span > span').click()
         except:
             pass
         else:
-            time.sleep(1)
+            time.sleep(3)
     html = (driver.page_source).encode('utf-8')
     soup = BeautifulSoup(html, 'html.parser')
     
@@ -167,10 +169,11 @@ def get_all_reviews(app):
 
 
 def get_new_reviews(app):
-    driver = webdriver.PhantomJS(os.getcwd()+'/phantomjs-2.1.1-linux-x86_64/bin/phantomjs')
-    driver.get(app.addr + LOCALE_SUFFIX + REVIEW_SUFFIX)
+    driver = webdriver.Edge(os.getcwd()+'/msedgedriver.exe')
+    driver.get(PLAY_DOMAIN + app.addr + LOCALE_SUFFIX + REVIEW_SUFFIX)
     # Reload Page with Newest Order
-    driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div > div:nth-child(2)').click()
+    driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div:nth-child(1)').click()
+    time.sleep(1)
     driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(1)').click()
     time.sleep(3)
 
@@ -218,13 +221,13 @@ def get_new_reviews(app):
         else:
             for j in range(3):
                 driver.execute_script('window.scrollTo(0,document.body.scrollHeight);')
-                time.sleep(1)
+                time.sleep(3)
                 try:
                     driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > div.PFAhAf > div').click()
                 except:
                     pass
                 else:
-                    time.sleep(1)
+                    time.sleep(3)
         
         if (i == SAVED_REVIEWS -1):
             print("ERROR-TOO MANY REVIEWS ARE DELETED")
@@ -233,35 +236,41 @@ def get_new_reviews(app):
     driver.close()
 
 def load_data():
-    name_list = os.listdir(os.getcwd() + '/data')
+    name_list = os.listdir(os.getcwd() + '\data\\')
     for n in name_list:
-        f = open('./data/'+n, 'r')
-        lines = f.readlines()
-        for i in range(9):
-            lines[i] = lines[i].strip().split('\t')
-        app = App()
-        app.name = lines[0][1]
-        app.addr = lines[1][1]
-        app.mean_rate = lines[2][1]
-        app.tot_rates = lines[3][1]
-        app.rate_5 = lines[4][1]
-        app.rate_4 = lines[5][1]
-        app.rate_3 = lines[6][1]
-        app.rate_2 = lines[7][1]
-        app.rate_1 = lines[8][1]
+        if 'meta' in n:
+            f = open('.\data\\'+n, 'r', encoding='utf-8')
+            lines = f.readlines()
+            for i in range(2):
+                lines[i] = lines[i].strip().split('\t')
+            app = App()
+            app.name = lines[0][1]
+            app.addr = lines[1][1]
 
-        for i in range(-1, -SAVED_REVIEWS -1, -1):
-            lines[i] = lines[i].strip().split('\t')
-            app.writer.append(lines[i][0])
-            app.rate.append(lines[i][1])
-            app.date.append(lines[i][2])
-            app.contents.append(lines[i][3])
+            print(app.name)
+            print(app.addr)
+
+            f.close()
+            f = open('.\data\\'+app.name+'_review.tsv','r', encoding='utf-8')
+            lines = f.readlines()
+            for i in range(-1, -SAVED_REVIEWS -1, -1):
+                lines[i] = lines[i].strip().split('\t')
+                app.writer.append(lines[i][0])
+                app.rate.append(lines[i][1])
+                app.date.append(lines[i][2])
+                app.contents.append(lines[i][3])
+            f.close()
+
+            app.reviewfile = open('.\data\\'+app.name+'_review.tsv','a', encoding='utf-8', newline='')
+            app.reviewwr = csv.writer(app.reviewfile, delimiter = '\t')
+
+            app.metafile = open('.\data\\'+app.name+'_meta.tsv', 'a', encoding='utf-8', newline='')
+            app.metawr = csv.writer(app.reviewfile, delimiter = '\t')
+
+            app_list.append(app)
         
-        f.close()
-        app.file = open(os.getcwd() + '/data/'+n, 'a')
-        app.wr = csv.writer(app.file, delimiter = '\t')
-
-        app_list.append(app)
+        else:
+            continue
 
 
 
@@ -284,16 +293,13 @@ if __name__ == "__main__":
 
 
     if (sys.argv[1] == '-c'):
-        load_data()
-        t = time.time()
-        
+        load_data()        
         cycle = 0
         while True:
             #get metadata for each hour
-                for app in app_list:
-                    get_metadata(app)
+            for app in app_list:
+                get_metadata(app)
                 get_new_reviews(app)
-                t = time.time()
             cycle +=1
             print(cycle)      
             time.sleep(3600)          
