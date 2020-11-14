@@ -1,6 +1,4 @@
 *.json
 *.log
 __pycache__
-*.tsv
 Spider/*.png
-*.tsv

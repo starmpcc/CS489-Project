@@ -73,7 +73,6 @@ def get_metadata(app):
     app.soup = BeautifulSoup(req.text, 'html.parser')
     
     tmp = app.soup.select('div.W4P4ne > c-wiz > div.K9wGie > div.BHMmbe')
-    print(tmp)
     app.mean_rate = tmp[0].contents[0]
 
     tmp = app.soup.select('div.W4P4ne > c-wiz > div.K9wGie > span > span:nth-child(2)')
@@ -118,8 +117,9 @@ def get_all_reviews(app):
     driver = webdriver.Edge(os.getcwd()+'/msedgedriver.exe')
     driver.get(PLAY_DOMAIN + app.addr + LOCALE_SUFFIX + REVIEW_SUFFIX)
     # Reload Page with Newest Order
+    time.sleep(3)
     driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div:nth-child(1)').click()
-    time.sleep(1)
+    time.sleep(3)
     driver.find_element_by_css_selector('div.W4P4ne > div:nth-child(2) > c-wiz > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(1)').click()
     time.sleep(3)
     
@@ -246,9 +246,6 @@ def load_data():
             app = App()
             app.name = lines[0][1]
             app.addr = lines[1][1]
-
-            print(app.name)
-            print(app.addr)
 
             f.close()
             f = open('.\data\\'+app.name+'_review.tsv','r', encoding='utf-8')
