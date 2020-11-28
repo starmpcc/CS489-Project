@@ -262,7 +262,7 @@ def load_data():
             app.reviewwr = csv.writer(app.reviewfile, delimiter = '\t')
 
             app.metafile = open('.\data\\'+app.name+'_meta.tsv', 'a', encoding='utf-8', newline='')
-            app.metawr = csv.writer(app.reviewfile, delimiter = '\t')
+            app.metawr = csv.writer(app.metafile, delimiter = '\t')
 
             app_list.append(app)
         
@@ -296,7 +296,7 @@ if __name__ == "__main__":
             #get metadata for each hour
             for app in app_list:
                 get_metadata(app)
-                get_new_reviews(app)
+#                get_new_reviews(app)
             cycle +=1
             print(cycle)      
             time.sleep(3600)          
