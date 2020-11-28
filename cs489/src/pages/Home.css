@@ -1,0 +1,27 @@
+.submit_button {
+  background-color: #d7d3d3;
+  border-color: #d7d3d3;
+  color: black;
+  width: 150px;
+  height: 40px;
+  font-size: 20px;
+  border-radius: 20px;
+}
+
+.submit_button:hover {
+  background: #a1a1a1;
+  border-color: #a1a1a1;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.25);
+}
+
+.submit_button:active {
+  background: #a1a1a1 !important;
+  border-color: #a1a1a1 !important;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.25);
+}
+
+.submit_button:focus {
+  background: #a1a1a1;
+  border-color: #a1a1a1;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.25);
+}

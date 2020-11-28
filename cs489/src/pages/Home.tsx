@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { Container } from "./Home.styles";
 
+import "./Home.css";
+
 export function Home() {
   const [message, setMessage] = useState("loading...");
   const [review, setReview] = useState("");
@@ -24,7 +26,9 @@ export function Home() {
       <label>
         검사하고 싶은 리뷰를 넣어주세요
         <input onChange={(x) => setReview(x.target.value)} />
-        <Button onClick={() => checkReview()} />
+        <Button className="submit_button" onClick={() => checkReview()}>
+          <b>리뷰 체크하기</b>
+        </Button>
       </label>
     </Container>
   );
