@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const cors = require("cors");
 
-router.get("/", cors(), (req, res) => {
-  console.log("connected with server router");
-  res.send({ title: "hi" });
+router.get("/", (req, res) => {
+  console.log("get request");
+  res.send({ title: "안녕하세요" });
 });
 
 module.exports = router;

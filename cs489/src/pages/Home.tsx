@@ -1,9 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Button } from "react-bootstrap";
+import { Container } from "./Home.styles";
 
 export function Home() {
   const [message, setMessage] = useState("loading...");
+  const [review, setReview] = useState("");
 
   fetch("http://localhost:3001/api")
     .then((res) => res.json())
@@ -13,9 +16,16 @@ export function Home() {
     console.log("message...?", message);
   }, [message]);
 
+  function checkReview() {}
+
   return (
-    <div>
+    <Container>
       <h1>{message}</h1>
-    </div>
+      <label>
+        검사하고 싶은 리뷰를 넣어주세요
+        <input onChange={(x) => setReview(x.target.value)} />
+        <Button onClick={() => checkReview()} />
+      </label>
+    </Container>
   );
 }

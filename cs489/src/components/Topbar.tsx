@@ -10,7 +10,7 @@ export function Topbar() {
     <div className="topbarcompound">
       <Link to="/">
         <div>
-          <Image src={logo_img} width="300vw"></Image>
+          <Image src={logo_img} width="180vw"></Image>
         </div>
       </Link>
       <h2>by Team6</h2>
