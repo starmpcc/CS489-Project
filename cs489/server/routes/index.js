@@ -5,10 +5,11 @@ const { PythonShell } = require("python-shell");
 
 router.get("/", (req, res) => {
   console.log("get request");
-  res.send({ title: "안녕하세요" });
+  res.send({ title: "Now Reo..." });
 });
 
 router.get("/test", (req, res) => {
   console.log("test for review score");
 });
+
 module.exports = router;

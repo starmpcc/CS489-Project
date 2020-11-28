@@ -13,15 +13,15 @@ export function Topbar() {
           <Image src={logo_img} width="180vw"></Image>
         </div>
       </Link>
-      <h2>by Team6</h2>
+
       <Nav className="navitems">
         <Nav.Item>
-          <Nav.Link className="navlink" href="/purchase">
+          <Nav.Link className="navlink" href="/function">
             <b>기능 소개</b>
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link className="navlink" href="/purchase">
+          <Nav.Link className="navlink" href="/team">
             <b>팀 소개</b>
           </Nav.Link>
         </Nav.Item>

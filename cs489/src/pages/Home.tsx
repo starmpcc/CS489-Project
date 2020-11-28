@@ -2,7 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
-import { Container } from "./Home.styles";
+import { Container, MainContainer, LoadingText } from "./Home.styles";
+import { Image } from "react-bootstrap";
+import eye_img from "../assets/eye_img.png";
+import hand_img from "../assets/hand_img.png";
 
 import "./Home.css";
 
@@ -18,18 +21,24 @@ export function Home() {
     console.log("message...?", message);
   }, [message]);
 
-  function checkReview() {}
-
   return (
-    <Container>
-      <h1>{message}</h1>
-      <label>
-        검사하고 싶은 리뷰를 넣어주세요
-        <input onChange={(x) => setReview(x.target.value)} />
-        <Button className="submit_button" onClick={() => checkReview()}>
-          <b>리뷰 체크하기</b>
-        </Button>
-      </label>
-    </Container>
+    <MainContainer>
+      <LoadingText>{message}</LoadingText>
+      <Image src={hand_img} className="catch_img" />
+      <Container>
+        <label>
+          <Link to="/test">
+            <Button className="go_test">
+              <b>리뷰 테스트하러 가기</b>
+            </Button>
+          </Link>
+          <Link to="/table">
+            <Button className="go_timeline">
+              <b>리뷰 변화상황 보러가기</b>
+            </Button>
+          </Link>
+        </label>
+      </Container>
+    </MainContainer>
   );
 }
