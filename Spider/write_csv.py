@@ -19,7 +19,7 @@ def write_metadata(app, t):
     t = time.gmtime(t)
     template = '{year}.{mon}.{day} {hour}:{min}'
     template = template.format(year = t.tm_year, mon = t.tm_mon, day = t.tm_mday, hour = t.tm_hour, min = t.tm_min)
-    print(template)
+    #print(template)
     app.metawr.writerow([template, app.mean_rate, app.tot_rates, app.rate_5, app.rate_4, app.rate_3, app.rate_2, app.rate_1])
 
 
