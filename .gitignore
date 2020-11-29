@@ -1,4 +1,4 @@
-*.json
+.vscode
 *.log
 __pycache__
 Spider/*.png
