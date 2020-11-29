@@ -12,6 +12,7 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "5.1.6",
     "beauty-stars": "1.1.0",
+    "body-parser": "1.19.0",
     "cors": "2.8.5",
     "http-proxy-middleware": "1.0.6",
     "python-shell": "2.0.3",

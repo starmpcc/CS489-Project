@@ -8,8 +8,20 @@ import "./TestPage.css";
 
 export function Testpage() {
   const [review, setReview] = useState("");
+  const [rate, setRate] = useState("0");
 
-  function checkReview() {}
+  useEffect(() => {
+    console.log("mz..?", rate);
+  }, [rate]);
+
+  function checkReview(review: String) {
+    console.log(review);
+
+    fetch("http://localhost:3001/test/" + review, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    }).then((response) => console.log(response.json()));
+  }
 
   return (
     <Container>
@@ -22,10 +34,11 @@ export function Testpage() {
           onChange={(x) => setReview(x.target.value)}
         />
         <Container>
-          <Button className="submit_button" onClick={() => checkReview()}>
+          <Button className="submit_button" onClick={() => checkReview(review)}>
             <b>리뷰 체크하기</b>
           </Button>
         </Container>
+        <h1>{rate}</h1>
       </label>
     </Container>
   );

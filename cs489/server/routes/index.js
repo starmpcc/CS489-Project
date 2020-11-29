@@ -8,8 +8,4 @@ router.get("/", (req, res) => {
   res.send({ title: "Now Reo..." });
 });
 
-router.get("/test", (req, res) => {
-  console.log("test for review score");
-});
-
 module.exports = router;
