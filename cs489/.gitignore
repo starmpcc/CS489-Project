@@ -21,5 +21,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+<<<<<<< HEAD
 
 .pth
+=======
+>>>>>>> fff8cb1ec24c47e783a01fa8f9d4716f201137a4
