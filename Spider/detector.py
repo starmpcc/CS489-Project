@@ -119,32 +119,39 @@ def plot_rate_bar():
             mean.append(i.Mean)
         fig, ax = plt.subplots(figsize = (20, 10))
         ax.set_title(app.name, {'fontsize':25})
-        ax.bar(t, rate5)
-        ax.bar(t, rate4)
-        ax.bar(t, rate3)
-        ax.bar(t, rate2)
-        ax.bar(t, rate1)
+        ax.plot([], [], color = 'red', label = 'rapid change')
+        ax.plot([], [], color = 'orange', label = 'rapid change + review deletion')
+        ax.plot([], [], color = 'yellow', label = 'review deletion')
+        ax.bar(range(len(t)), rate5, label = '5')
+        ax.bar(range(len(t)), rate4, label = '4')
+        ax.bar(range(len(t)), rate3, label = '3')
+        ax.bar(range(len(t)), rate2, label = '2')
+        ax.bar(range(len(t)), rate1, label = '1')
+        ax.set_xticks(range(len(t)))
+        ax.set_xticklabels(t)
+        plt.legend(loc = 'upper left')
+
         for i, v in enumerate(t):
-            ax.text(t[i], rate5[i], mean[i])
+            ax.text(i - 0.3, rate5[i]*1.01, str(mean[i]))
         plt.gcf().autofmt_xdate()
 
         flag = 0
         if (app.rapid_change):
             flag = 1
             for i in app.rapid_change:
-                start = str(datetime.datetime.fromtimestamp(app.meta[i-1].Time))
-                end = str(datetime.datetime.fromtimestamp(app.meta[i].Time))
+                start = i-1
+                end = i
                 plt.axvspan(start, end, facecolor = 'red', alpha = 0.5)            
         if (app.deletion_list):
             flag = 1
             for i in app.deletion_list:
-                start = str(datetime.datetime.fromtimestamp(app.meta[i-1].Time))
-                end = str(datetime.datetime.fromtimestamp(app.meta[i].Time))
-                plt.axvspan(start, end, facecolor = 'yellow', alpha = 0.5)          
+                start = i-1
+                end = i
+                plt.axvspan(start, end, facecolor = 'yellow', alpha = 0.5)
+
         if (flag): 
             plt.savefig(os.path.join(root, app.name+'.png'))
-        plt.show()
-
+        plt.close()
 
 if __name__ == "__main__":
     l = os.listdir(os.path.join(root, 'data'))
@@ -155,4 +162,9 @@ if __name__ == "__main__":
             load_data(i)
     detect_rapid_change()
     detect_review_deletion()
+    for app in app_list:
+        if (app.rapid_change):
+            print('rate change occured: '+app.name)
+        if (app.deletion_list):
+            print('review deletion occured: '+app.name)
     plot_rate_bar()
