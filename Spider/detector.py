@@ -4,13 +4,15 @@ import os
 import csv
 import time
 import matplotlib.pyplot as plt
+import datetime
+
 app_list = []
 root = os.path.dirname(os.path.abspath(__file__))
 
 
 class Meta:
     def __init__(self):
-        self.time = 0
+        self.time = time.time()
         self.Mean = 0
         self.Total = 0
         self.Rate5 = 0
@@ -24,6 +26,8 @@ class App:
         self.name = None
         self.addr = None
         self.meta = []
+        self.rapid_change = []
+        self.deletion_list = []
 
 
 def load_data(n):
@@ -76,23 +80,24 @@ def calc_all_deletion():
 
 
 def detect_rapid_change():
-    rapid_change = []
     for app in app_list:
+        rapid_change = []
         for i in range(1, len(app.meta)):
             if (app.meta[i].Time != app.meta[i-1].Time):
                 if (abs((app.meta[i].Recalc - app.meta[i-1].Recalc)/(app.meta[i].Time - app.meta[i-1].Time)) >= 2e-5):
-                    rapid_change.append((app.name, app.meta[i]))
-    return rapid_change
+                    rapid_change.append(i)
+        app.rapid_change = rapid_change
 
 
 def detect_review_deletion():
-    deletion_list = []
     for app in app_list:
+        deletion_list = []
         for i in range(1, len(app.meta)):
             if (app.meta[i].Time != app.meta[i-1].Time):
-                if ((app.meta[i].Total - app.meta[i-1].Total)/(app.meta[i].Time - app.meta[i-1].Time) < 1e-2):
-                    deletion_list.append((app.name, app.meta[i]))
-    return deletion_list
+                if ((app.meta[i].Total - app.meta[i-1].Total)/(app.meta[i].Time - app.meta[i-1].Time) < -1e-2):
+                    deletion_list.append(i)
+        app.deletion_list = deletion_list
+
 
 def plot_rate_bar():
     for app in app_list:
@@ -101,26 +106,45 @@ def plot_rate_bar():
         rate3 = []
         rate2 = []
         rate1 = []
-        time = []
+        t = []
+        mean = []
         for i in app.meta:
-            regularize = 100/(i.Rate5 + i.Rate4 + i.Rate3 + i.Rate2 + i.Rate1)
+            regularize = i.Total/(i.Rate5 + i.Rate4 + i.Rate3 + i.Rate2 + i.Rate1)
             rate5.append((i.Rate5 + i.Rate4 + i.Rate3 + i.Rate2 + i.Rate1 ) * regularize)
             rate4.append((i.Rate4 + i.Rate3 + i.Rate2 + i.Rate1) * regularize)
             rate3.append((i.Rate3 +i.Rate2 + i.Rate1) * regularize)
             rate2.append((i.Rate2 + i.Rate1) * regularize)
             rate1.append(i.Rate1 * regularize)
-            time.append(i.Time)
-        plt.bar(range(len(rate1)), rate5)
-        plt.bar(range(len(rate1)), rate4)
-        plt.bar(range(len(rate1)), rate3)
-        plt.bar(range(len(rate1)), rate2)
-        plt.bar(range(len(rate1)), rate1)
+            t.append(str(datetime.datetime.fromtimestamp(i.Time)))
+            mean.append(i.Mean)
+        fig, ax = plt.subplots(figsize = (20, 10))
+        ax.set_title(app.name, {'fontsize':25})
+        ax.bar(t, rate5)
+        ax.bar(t, rate4)
+        ax.bar(t, rate3)
+        ax.bar(t, rate2)
+        ax.bar(t, rate1)
+        for i, v in enumerate(t):
+            ax.text(t[i], rate5[i], mean[i])
+        plt.gcf().autofmt_xdate()
 
-
-        plt.savefig('temp.png')
+        flag = 0
+        if (app.rapid_change):
+            flag = 1
+            for i in app.rapid_change:
+                start = str(datetime.datetime.fromtimestamp(app.meta[i-1].Time))
+                end = str(datetime.datetime.fromtimestamp(app.meta[i].Time))
+                plt.axvspan(start, end, facecolor = 'red', alpha = 0.5)            
+        if (app.deletion_list):
+            flag = 1
+            for i in app.deletion_list:
+                start = str(datetime.datetime.fromtimestamp(app.meta[i-1].Time))
+                end = str(datetime.datetime.fromtimestamp(app.meta[i].Time))
+                plt.axvspan(start, end, facecolor = 'yellow', alpha = 0.5)          
+        if (flag): 
+            plt.savefig(os.path.join(root, app.name+'.png'))
         plt.show()
 
-        break
 
 if __name__ == "__main__":
     l = os.listdir(os.path.join(root, 'data'))
@@ -129,5 +153,6 @@ if __name__ == "__main__":
             continue
         else:
             load_data(i)
-
+    detect_rapid_change()
+    detect_review_deletion()
     plot_rate_bar()
