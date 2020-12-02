@@ -17,12 +17,12 @@ export function Topbar() {
       <Nav className="navitems">
         <Nav.Item>
           <Nav.Link className="navlink" href="/function">
-            <b>기능 소개</b>
+            <b>Inro</b>
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link className="navlink" href="/team">
-            <b>팀 소개</b>
+            <b>About us</b>
           </Nav.Link>
         </Nav.Item>
       </Nav>

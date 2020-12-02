@@ -5,3 +5,4 @@ Spider/*.png
 Spider/data/*
 temp.png
 .DS_Store
+.pth

@@ -29,12 +29,12 @@ export function Home() {
         <label>
           <Link to="/test">
             <Button className="go_test">
-              <b>리뷰 테스트하러 가기</b>
+              <b>Review Judgement</b>
             </Button>
           </Link>
           <Link to="/table">
             <Button className="go_timeline">
-              <b>리뷰 변화상황 보러가기</b>
+              <b>Alert Reviews</b>
             </Button>
           </Link>
         </label>
