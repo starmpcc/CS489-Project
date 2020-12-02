@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, Image } from "react-bootstrap";
-import { CloseIcon, AcrylicNails } from "../assets";
+import { CloseIcon } from "../assets";
 import {
   Container,
   modalStyles,
@@ -14,7 +14,7 @@ import {
 import "../styles/css/Reviewcard.css";
 import Modal from "react-modal";
 
-export function Appcard(props: { name: string }) {
+export function Appcard(props: { name: string; img: any }) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -23,17 +23,6 @@ export function Appcard(props: { name: string }) {
   return (
     <Container>
       <Button onClick={handleShow}>{props.name}</Button>
-
-      {/* <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
       <Modal isOpen={show} style={modalStyles}>
         <ModalInner>
           <ModalHeader>
@@ -42,7 +31,7 @@ export function Appcard(props: { name: string }) {
             </HeaderLeft>
             <CloseButton src={CloseIcon} onClick={handleClose} />
           </ModalHeader>
-          <Image src={AcrylicNails} width="900vw"></Image>
+          <Image src={props.img} width="900vw"></Image>
         </ModalInner>
       </Modal>
     </Container>
