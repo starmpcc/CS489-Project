@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
   res.send({ title: "hi for coming to test" });
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   let content = req.params.id;
   console.log("fixed score of:", content);
   //////////////////////////////////////////////////////////
@@ -26,8 +26,8 @@ router.get("/:id", (req, res) => {
     }
   );
   ///////////////////////////////////////////////////////////
-
-  res.send({ score: score });
+  let final_score = await score;
+  res.send({ score: final_score });
 });
 
 module.exports = router;

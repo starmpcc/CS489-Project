@@ -17,25 +17,31 @@ export function Testpage() {
   function checkReview(review: String) {
     console.log(review);
 
-    fetch("http://localhost:3001/test/" + review, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    }).then((response) => console.log(response.json()));
+    fetch("http://localhost:3001/test/" + review).then((response) =>
+      console.log(response.json())
+    );
+  }
+
+  async function reviewCheck(review: string) {
+    console.log("check this:", review);
+    const response = await fetch("http://localhost:3001/test/" + review);
+    const response_score = await response.json();
+    console.log(response_score);
   }
 
   return (
     <Container>
       <label>
         <Container>
-          <h2>검사하고 싶은 리뷰를 넣어주세요</h2>
+          <h2>Put your review</h2>
         </Container>
         <input
           className="textinput"
           onChange={(x) => setReview(x.target.value)}
         />
         <Container>
-          <Button className="submit_button" onClick={() => checkReview(review)}>
-            <b>리뷰 체크하기</b>
+          <Button className="submit_button" onClick={() => reviewCheck(review)}>
+            <b>check review</b>
           </Button>
         </Container>
         <h1>{rate}</h1>

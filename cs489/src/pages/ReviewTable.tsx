@@ -14,7 +14,7 @@ export function Reviewtable() {
     <Container>
       <label>
         <Container>
-          <h2>게임 리뷰들입니다</h2>
+          <h2>Review Alert</h2>
         </Container>
         {reviewdata.map((item) => (
           <Appcard name={item.Name[0]} />

@@ -32,8 +32,8 @@ def test(ckpt):
 
     results = model(sentence, label)
     _softmax = F.softmax(results[0], dim=1)
-    pred = torch.argmax(F.softmax(results[0], dim=1))
-    print(f"Rate: {pred+1}")
+    pred = torch.argmax(F.softmax(results[0], dim=1)).item()
+    print(f"{pred+1}")
     #   print("\n")
 
 

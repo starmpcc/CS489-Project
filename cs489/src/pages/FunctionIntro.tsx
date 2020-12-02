@@ -11,7 +11,7 @@ export function Functionintro() {
     <Container>
       <label>
         <Container>
-          <h2>기능 소개</h2>
+          <h2>Intro</h2>
         </Container>
       </label>
     </Container>
