@@ -8,6 +8,19 @@ router.get("/", (req, res) => {
   res.send({ title: "hi for coming to test" });
 });
 
+async function using_bert(sentence) {
+  var options = { args: [content] };
+  PythonShell.run(
+    "/Users/songminjae/Desktop/CS489_PROJECT/bert/infer.py",
+    options,
+    function (err, results) {
+      if (err) throw err;
+      console.log("ssss", results);
+      score = results;
+    }
+  );
+}
+
 router.get("/:id", async (req, res) => {
   let content = req.params.id;
   console.log("fixed score of:", content);
@@ -23,11 +36,10 @@ router.get("/:id", async (req, res) => {
       if (err) throw err;
       console.log("ssss", results);
       score = results;
+      res.send({ score: score });
     }
   );
   ///////////////////////////////////////////////////////////
-  let final_score = await score;
-  res.send({ score: final_score });
 });
 
 module.exports = router;

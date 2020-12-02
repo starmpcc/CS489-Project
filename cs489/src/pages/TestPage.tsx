@@ -26,7 +26,8 @@ export function Testpage() {
     console.log("check this:", review);
     const response = await fetch("http://localhost:3001/test/" + review);
     const response_score = await response.json();
-    console.log(response_score);
+    console.log(response_score.score);
+    setRate(response_score.score);
   }
 
   return (
@@ -44,7 +45,7 @@ export function Testpage() {
             <b>check review</b>
           </Button>
         </Container>
-        <h1>{rate}</h1>
+        <h1>This review is determined to be {rate}</h1>
       </label>
     </Container>
   );
