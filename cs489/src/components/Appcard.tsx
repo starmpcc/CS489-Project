@@ -10,6 +10,7 @@ import {
   HeaderLeft,
   HeaderSquare,
   CloseButton,
+  WidenButton,
 } from "./Appcard.styles";
 import "../styles/css/Reviewcard.css";
 import Modal from "react-modal";
@@ -22,7 +23,7 @@ export function Appcard(props: { name: string; img: any }) {
 
   return (
     <Container>
-      <Button onClick={handleShow}>{props.name}</Button>
+      <WidenButton onClick={handleShow}>{props.name}</WidenButton>
       <Modal isOpen={show} style={modalStyles}>
         <ModalInner>
           <ModalHeader>

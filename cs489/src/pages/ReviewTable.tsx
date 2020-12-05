@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
-import { Container } from "./Home.styles";
+import { Container, Title } from "./Home.styles";
 import { Appcard } from "../components/Appcard";
 
 import { reviewdata } from "../utils/data";
@@ -62,7 +62,7 @@ export function Reviewtable() {
     <Container>
       <label>
         <Container>
-          <h2>Review Alert</h2>
+          <Title>Review Alert</Title>
         </Container>
         {reviewdata.map((item) => (
           <Appcard name={item.Name[0]} img={filter(item.Name[0])} />

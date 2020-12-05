@@ -1,8 +1,8 @@
 import styled, { css } from "styled-components";
 
 export const Container = styled.div`
-  padding-top: 71px;
-  padding-bottom: 66px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   display: flex;
   flex-direction: column;
   max-width: 1100px;
@@ -56,5 +56,17 @@ export const HeaderSquare = styled.div`
 export const CloseButton = styled.img`
   width: 26px;
   height: 26px;
+  cursor: pointer;
+`;
+
+export const WidenButton = styled.button`
+  width: 100%;
+  height: 50px;
+  font-size: 30px;
+  font-weight: bold;
+  margin: 30px 0;
+  background-color: #007fff;
+  color: white;
+  border: none;
   cursor: pointer;
 `;

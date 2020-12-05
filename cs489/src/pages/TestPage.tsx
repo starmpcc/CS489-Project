@@ -2,9 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
-import { Container } from "./Home.styles";
 
 import "./TestPage.css";
+import { Section, SectionTitle, TextArea } from "./TestPage.styles";
+import { Container, Title } from "./Home.styles";
 
 export function Testpage() {
   const [review, setReview] = useState("");
@@ -32,21 +33,22 @@ export function Testpage() {
 
   return (
     <Container>
-      <label>
+      <Section>
         <Container>
-          <h2>Put your review</h2>
+          <Title>Put your Review</Title>
         </Container>
-        <input
-          className="textinput"
-          onChange={(x) => setReview(x.target.value)}
+        <TextArea
+          value={review}
+          onChange={({ target }) => setReview(target.value)}
         />
-        <Container>
-          <Button className="submit_button" onClick={() => reviewCheck(review)}>
-            <b>check review</b>
-          </Button>
-        </Container>
-        <h1>This review is determined to be {rate}</h1>
-      </label>
+      </Section>
+
+      <Container>
+        <Button className="submit_button" onClick={() => reviewCheck(review)}>
+          <b>check review</b>
+        </Button>
+      </Container>
+      <h1>This review is determined to be {rate}</h1>
     </Container>
   );
 }

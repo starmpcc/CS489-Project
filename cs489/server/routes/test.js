@@ -11,7 +11,7 @@ router.get("/", (req, res) => {
 async function using_bert(sentence) {
   var options = { args: [content] };
   PythonShell.run(
-    "/Users/songminjae/Desktop/CS489_PROJECT/bert/infer.py",
+    "/Users/songminjae/Desktop/cs489-Project/bert/infer.py",
     options,
     function (err, results) {
       if (err) throw err;
@@ -30,7 +30,7 @@ router.get("/:id", async (req, res) => {
     args: [content],
   };
   PythonShell.run(
-    "/Users/songminjae/Desktop/CS489_PROJECT/bert/infer.py",
+    "/Users/songminjae/Desktop/CS489-Project/bert/infer.py",
     options,
     function (err, results) {
       if (err) throw err;

@@ -28,3 +28,12 @@ export const Container = styled.div`
 export const LoadingText = styled.h1`
   color: white;
 `;
+
+export const Title = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 47px;
+  margin-bottom: 20px;
+  align-self: center;
+  text-decoration: underline 3px solid #ff9900;
+`;
