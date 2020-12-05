@@ -39,7 +39,8 @@ def load_data(n):
     app.name = lines[0][1]
     app.addr = lines[1][1]
     app_list.append(app)
-    for i in range(3, len(lines)):
+    #ignore old data
+    for i in range(43, len(lines)):
         tmp = lines[i].strip().split('\t')
         meta = Meta()
         meta.Time = time.mktime(time.strptime(tmp[0], '%Y.%m.%d %H:%M'))
@@ -61,29 +62,35 @@ Not used in Program(Only for Dev)
 """
 def calc_all_deriv():
     deriv = []
+    cnt = 0
     for app in app_list:
         for i in range(1, len(app.meta)):
-            if (app.meta[i].Time != app.meta[i-1].Time):
+            if (abs(app.meta[i].Time - app.meta[i-1].Time)>1000):
                 deriv.append((app.meta[i].Recalc - app.meta[i-1].Recalc)/(app.meta[i].Time - app.meta[i-1].Time))
+                if (abs(app.meta[i].Recalc - app.meta[i-1].Recalc)/(app.meta[i].Time - app.meta[i-1].Time) > 2e-5 ):
+                    cnt+=1
     deriv.sort()
-    print(deriv)
-
+    print(len(deriv))
+    print(cnt)
 
 def calc_all_deletion():
     deletion_list = []
+    cnt = 0
     for app in app_list:
         for i in range(1, len(app.meta)):
-            if (app.meta[i].Time != app.meta[i-1].Time):
+            if (abs(app.meta[i].Time - app.meta[i-1].Time)>1000):
                 deletion_list.append((app.meta[i].Total - app.meta[i-1].Total)/(app.meta[i].Time - app.meta[i-1].Time))
+                if ((app.meta[i].Total - app.meta[i-1].Total)/(app.meta[i].Time - app.meta[i-1].Time) < 0):
+                    cnt+=1
     deletion_list.sort()
-    print(deletion_list)
-
+    print(len(deletion_list))
+    print(cnt)
 
 def detect_rapid_change():
     for app in app_list:
         rapid_change = []
         for i in range(1, len(app.meta)):
-            if (app.meta[i].Time != app.meta[i-1].Time):
+            if (abs(app.meta[i].Time - app.meta[i-1].Time)>1000):
                 if (abs((app.meta[i].Recalc - app.meta[i-1].Recalc)/(app.meta[i].Time - app.meta[i-1].Time)) >= 2e-5):
                     rapid_change.append(i)
         app.rapid_change = rapid_change
@@ -93,8 +100,8 @@ def detect_review_deletion():
     for app in app_list:
         deletion_list = []
         for i in range(1, len(app.meta)):
-            if (app.meta[i].Time != app.meta[i-1].Time):
-                if ((app.meta[i].Total - app.meta[i-1].Total)/(app.meta[i].Time - app.meta[i-1].Time) < -1e-2):
+            if (abs(app.meta[i].Time - app.meta[i-1].Time)>1000):
+                if ((app.meta[i].Total - app.meta[i-1].Total)/(app.meta[i].Time - app.meta[i-1].Time) < 0):
                     deletion_list.append(i)
         app.deletion_list = deletion_list
 
@@ -117,7 +124,7 @@ def plot_rate_bar():
             rate1.append(i.Rate1 * regularize)
             t.append(str(datetime.datetime.fromtimestamp(i.Time)))
             mean.append(i.Mean)
-        fig, ax = plt.subplots(figsize = (20, 10))
+        fig, ax = plt.subplots(figsize = (50, 10))
         ax.set_title(app.name, {'fontsize':25})
         ax.plot([], [], color = 'red', label = 'rapid change')
         ax.plot([], [], color = 'orange', label = 'rapid change + review deletion')
@@ -160,6 +167,8 @@ if __name__ == "__main__":
             continue
         else:
             load_data(i)
+    calc_all_deriv()
+    calc_all_deletion()
     detect_rapid_change()
     detect_review_deletion()
     for app in app_list:
