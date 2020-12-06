@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import matrix_img from "../assets/matrix_back.jpg";
 
 export const Container = styled.div`
   width: 1100px;
@@ -24,4 +25,21 @@ export const SectionTitle = styled.div`
 export const TextArea = styled.textarea`
   min-height: 300px;
   width: 100%;
+`;
+
+export const MainContainer = styled.div`
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url(${matrix_img});
+  background-color: #ffffff;
+
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
 `;

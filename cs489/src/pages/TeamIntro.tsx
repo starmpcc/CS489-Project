@@ -15,7 +15,7 @@ export function Teamintro() {
     <Container>
       <label>
         <Container>
-          <h2>저희는 team6입니다</h2>
+          <h2>We are team 6</h2>
         </Container>
       </label>
     </Container>

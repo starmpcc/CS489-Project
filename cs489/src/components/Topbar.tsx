@@ -17,7 +17,7 @@ export function Topbar() {
       <Nav className="navitems">
         <Nav.Item>
           <Nav.Link className="navlink" href="/function">
-            <b>Inro</b>
+            <b>Intro</b>
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>

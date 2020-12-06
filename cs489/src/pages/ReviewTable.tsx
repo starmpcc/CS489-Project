@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { Container, Title } from "./Home.styles";
+import { MainContainer } from "./ReviewTable.styles";
 import { Appcard } from "../components/Appcard";
 
 import { reviewdata } from "../utils/data";
@@ -59,7 +60,7 @@ export function Reviewtable() {
   }
 
   return (
-    <Container>
+    <MainContainer>
       <label>
         <Container>
           <Title>Review Alert</Title>
@@ -68,6 +69,6 @@ export function Reviewtable() {
           <Appcard name={item.Name[0]} img={filter(item.Name[0])} />
         ))}
       </label>
-    </Container>
+    </MainContainer>
   );
 }

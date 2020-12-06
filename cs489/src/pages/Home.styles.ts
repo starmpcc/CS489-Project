@@ -35,5 +35,6 @@ export const Title = styled.div`
   margin-top: 47px;
   margin-bottom: 20px;
   align-self: center;
-  text-decoration: underline 3px solid #ff9900;
+  text-decoration: underline 3px solid white;
+  color: white;
 `;

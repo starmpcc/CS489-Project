@@ -4,7 +4,12 @@ import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 
 import "./TestPage.css";
-import { Section, SectionTitle, TextArea } from "./TestPage.styles";
+import {
+  Section,
+  SectionTitle,
+  TextArea,
+  MainContainer,
+} from "./TestPage.styles";
 import { Container, Title } from "./Home.styles";
 
 export function Testpage() {
@@ -32,7 +37,7 @@ export function Testpage() {
   }
 
   return (
-    <Container>
+    <MainContainer>
       <Section>
         <Container>
           <Title>Put your Review</Title>
@@ -48,7 +53,7 @@ export function Testpage() {
           <b>check review</b>
         </Button>
       </Container>
-      <h1>This review is determined to be {rate}</h1>
-    </Container>
+      <Title>This review is determined to be {rate}</Title>
+    </MainContainer>
   );
 }
