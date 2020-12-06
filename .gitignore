@@ -3,6 +3,7 @@
 __pycache__
 Spider/*.png
 Spider/data/*
+!Spider/data/data.tar.gz
 temp.png
 .DS_Store
 .pth
