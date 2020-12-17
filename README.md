@@ -19,6 +19,10 @@ Spider & Detectpr
 
 Model
 ----
+- Python 3.6
+- pytorch
+- pandas
+- transformers
 
 Service
 -----
@@ -39,6 +43,11 @@ Directory Structure
 |   |-- data
 |   |   |-- data.tar.gz
 |-- bert
+|   |-- data
+|   |   |-- cleanse.py
+|   |   |-- equalize.py
+|   |-- infer.py
+|   |-- train.py
 |-- cs489
 |
 ```
@@ -79,3 +88,16 @@ Spider
  - data
     - Collected data from Spider
     - Saved as `data.tar.gz`
+
+Model
+----
+- download pretrained model from 
+`https://drive.google.com/file/d/1SCaPK6HhUHl9FS4bTPkOlHGSaC4HUJs5/view?usp=sharing`
+- `train.py`
+ - code to train
+ - download dataset from [link](https://jmcauley.ucsd.edu/data/amazon/)
+ - use `data/equalize.py` for preprocessing
+- `infer.py`
+ - code to infer
+ - `Path to the checkpoint: ` - write path you save ckpt
+ - `Enter Sentence: ` - write sentence you want to test 
