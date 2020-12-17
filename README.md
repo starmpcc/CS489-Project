@@ -120,5 +120,19 @@ Model
    - `Path to the checkpoint: ` - write path you save ckpt
    - `Enter Sentence: ` - write sentence you want to test 
 
-Image Reference
+Service
+----
+- `$ yarn install`
+- `server.js`
+   - code about starting server
+   - at path ./cs489/server/ `$ node server.js`
+- starting web
+   - at path ./cs489/ `$ yarn start`
+
+
+## Final Persentation
+[link](https://youtu.be/69NOLS050U0)
+
+## Image Reference
 - Matrix (pill image)
+- matrix image - https://techcrunch.com/2019/03/18/how-to-build-the-matrix/ (photo by Ismagiov, Shutterstock)
