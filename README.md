@@ -26,6 +26,12 @@ Model
 
 Service
 -----
+- React 16.9
+- Typescript 4.0.2
+- styled-component 5.2.1
+- node 14.15.1
+- pythonshell 2.0.3
+- react-bootstrap 1.4.0
 
 Directory Structure
 ======
@@ -49,7 +55,20 @@ Directory Structure
 |   |-- infer.py
 |   |-- train.py
 |-- cs489
-|
+|   |-- src
+|   |   |-- assets
+|   |   |-- components
+|   |   |-- pages
+|   |   |-- routers
+|   |   |-- styles
+|   |   |-- utils
+|   |   |-- App.tsx
+|   |-- public
+|   |-- server
+|   |   |-- assets/graphs
+|   |   |-- routes
+|   |   |-- server.js
+|   |   |-- serverProxy.js
 ```
 Spider
 ----
@@ -100,3 +119,6 @@ Model
    - code to infer
    - `Path to the checkpoint: ` - write path you save ckpt
    - `Enter Sentence: ` - write sentence you want to test 
+
+Image Reference
+- Matrix (pill image)
