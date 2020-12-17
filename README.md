@@ -91,8 +91,7 @@ Spider
 
 Model
 ----
-- download pretrained model from 
-`https://drive.google.com/file/d/1SCaPK6HhUHl9FS4bTPkOlHGSaC4HUJs5/view?usp=sharing`
+- download pretrained model from [link](https://drive.google.com/file/d/1SCaPK6HhUHl9FS4bTPkOlHGSaC4HUJs5/view?usp=sharing)
 - `train.py`
    - code to train
    - download dataset from [link](https://jmcauley.ucsd.edu/data/amazon/)
