@@ -122,16 +122,16 @@ Model
 
 Service
 ----
-- `$ yarn install`
+- `yarn install`
 - `server.js`
    - code about starting server
-   - at path ./cs489/server/ `$ node server.js`
+   - at path ./cs489/server/ `node server.js`
 - starting web
-   - at path ./cs489/ `$ yarn start`
+   - at path ./cs489/ `yarn start`
 
 
 ## Final Persentation
-[link](https://youtu.be/69NOLS050U0)
+- [link](https://youtu.be/69NOLS050U0)
 
 ## Image Reference
 - Matrix (pill image)
